@@ -1,42 +1,44 @@
 from django.shortcuts import render, redirect
-from .forms import ContactForm
+from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.conf import settings
-from django.core.mail import BadHeaderError, send_mail
-from django.core.mail import EmailMessage
-
-
-# Create your views here.
-def index(request):
-    return render(request, "contact/index.html")
+from .forms import ContactForm
 
 
 def contact_form(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
+            name = form.cleaned_data["name"]
+            email = form.cleaned_data["email"]
             subject = form.cleaned_data["subject"]
             message = form.cleaned_data["message"]
-            sender = form.cleaned_data["sender"]
-            myself = form.cleaned_data["myself"]
+            send_copy = form.cleaned_data["send_copy"]
+
+            full_message = (
+                f"お名前: {name}\nメールアドレス: {email}\n\nメッセージ:\n{message}"
+            )
             recipients = [settings.EMAIL_HOST_USER]
-            if myself:
-                recipients.append(sender)
+            if send_copy:
+                recipients.append(email)
+
             try:
-                # send_mail(subject, message, sender, recipients)
-                email = EmailMessage(
+                email_message = EmailMessage(
                     subject=subject,
-                    body=message,
-                    from_email=f"{sender}",  # 设置发件人邮箱
+                    body=full_message,
+                    from_email=settings.EMAIL_HOST_USER,  # サーバーメールアドレス
                     to=recipients,
-                    headers={"Reply-To": sender},  # 可选：让收件人回复时发送到 `sender`
+                    headers={"Reply-To": email},  # 返信先を送信者にする
                 )
-                email.send()
-            except BadHeaderError:
-                return HttpResponse("無効なヘッダーが見つかりました。")
+                email_message.send()
+            except Exception as e:
+                return HttpResponse(f"メール送信中にエラーが発生しました: {e}")
+
             return redirect("contact:complete")
+
     else:
         form = ContactForm()
+
     return render(request, "contact/contact_form.html", {"form": form})
 
 

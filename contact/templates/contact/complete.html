@@ -1,6 +1,13 @@
-<center>
-    <h1>送信完了</h1>
-    <a href="{% url 'contact:index' %}">
-    <p>トップへ</p>
-    </a>
-</center>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>送信完了</title>
+</head>
+<body>
+    <h2>お問い合わせありがとうございました。</h2>
+    <p>メッセージが送信されました。</p>
+    <a href="{% url 'contact:contact_form' %}">戻る</a>
+</body>
+</html>

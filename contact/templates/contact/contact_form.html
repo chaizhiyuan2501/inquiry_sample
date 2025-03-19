@@ -1,10 +1,16 @@
-<center>
-    <h1>入力フォーム</h1><hr><br>
-<form action="{% url 'contact:contact_form' %}" method="post">
-    {% csrf_token %}
-<table>
-    {{ form.as_table }}
-</table><br>
-    <input type="submit" value="送信">
-</form>
-</center>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ</title>
+</head>
+<body>
+    <h2>お問い合わせフォーム</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">送信</button>
+    </form>
+</body>
+</html>

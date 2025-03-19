@@ -118,12 +118,14 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# メールサーバー用
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "kirisamekari928@gmail.com"
-EMAIL_HOST_PASSWORD = "isfemerscfcovyex"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "kirisamekari928@gmail.com"
+EMAIL_HOST_PASSWORD = "EMAIL_HOST_PASSWORD"
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
